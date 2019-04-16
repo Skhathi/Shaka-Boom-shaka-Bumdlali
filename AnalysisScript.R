@@ -130,6 +130,7 @@ for (i in 1:length(vec_allUserIDs)){ # change the 3 to length(vec_allUserIDs)
       
       df_userDataEach <- vec_allUserIDs[i]
       df_userInQuestion <- get(df_userDataEach) # Get the df according to the variable name
+      
       # next is a vector of the entries I need to append
       addition <- c(df_gameData$GameId[ind[j]], 
                     gsub("\\ .*", "",df_gameData$DatePlayed[ind[j]]), # does some freaky shit when using as.Date so just remove anything following date
@@ -151,6 +152,8 @@ for (i in 1:length(vec_allUserIDs)){ # change the 3 to length(vec_allUserIDs)
   
   
 }
+
+
 
 
 
