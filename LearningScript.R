@@ -85,7 +85,7 @@ for (j in 1:nrow(df_gameDataSpecUser)){
   # next is a vector of the entries I need to append
   addition <- c(df_gameDataSpecUser$GameId[j], 
                 gsub("\\ .*", "",df_gameDataSpecUser$DatePlayed[j]), # does some freaky shit when using as.Date so just remove anything following date
-                df_gameDataSpecUser$DatePlayed[j], # this has the tiime but I'm not thinking about it too much. I'll sort when I do
+                sub('\\..*', '', (gsub(paste(as.Date(df_gameDataSpecUser$DatePlayed[j]), "", collapse = NULL), "", df_gameDataSpecUser$DatePlayed[j]))), # this has the tiime but I'm not thinking about it too much. I'll sort when I do
                 df_catAndConc$Category[ind],  
                 df_gameDataSpecUser$Concept[j], 
                 df_gameDataSpecUser$Difficulty[j], 
@@ -94,18 +94,17 @@ for (j in 1:nrow(df_gameDataSpecUser)){
   
   df_skrrr[nrow(df_skrrr)+1, ] <- addition # finally, addition of row works
   # Introducing df_skrrr
+  if (j == nrow(df_gameDataSpecUser)){
+    df_skrrr$Diff <- as.integer(df_skrrr$Diff)
+  }
 }
 
 
-
-
-
-
-
-
-
-
-
-
 ## Now to actually build learning framework
-##----
+##---- 
+# Dividing time range into analysable chunks
+df_skrrr <- df_skrrr[order(df_skrrr$Date, df_skrrr$Time),]
+
+
+
+
