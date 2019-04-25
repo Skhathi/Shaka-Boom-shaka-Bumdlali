@@ -2,11 +2,12 @@ library(pacman) # Check https://github.com/trinker/pacman for pacman package use
 p_load(readxl)
 p_load(tidyverse)
 p_load(dplyr)
+source("AnalysisScript.R")
 
 
-## Following code produces df df_skrrr1 for a specific user to make framework for
+## Following code produces df df_skrrr1,2,3 for specific users to make framework for
+# Automate this in a loop for all users (these will be changed to be the user IDs for automation)
 ##----
-# Automate this in a loop for all users
 df_skrrr1 <- setNames(data.frame(matrix(ncol = 7, nrow = 0)), 
                      c("GameID",
                        "Date",
@@ -51,14 +52,16 @@ zul_path <- paste0(path_df, "Zulu/", collapse = NULL)
 eng_files <- list.files(eng_path, all.files = FALSE, full.names = FALSE)
 zul_files <- list.files(zul_path, all.files = FALSE, full.names = FALSE)
 
+
+# For different kinds of string regex manipulation and replacement see 
+# https://stevencarlislewalker.wordpress.com/2013/02/13/remove-or-replace-everything-before-or-after-a-specified-character-in-r-strings/
 eng_df_names <- vector()
 for (i in 1:length(eng_files)) {
   df <- as.data.frame(read_csv2(paste0(eng_path, eng_files[i], collapse = NULL)))
   name_of_df <- gsub("\\-.*", "", eng_files[i])
   assign(name_of_df,df)
   rm(df)
-  eng_df_names <- c(eng_df_names, name_of_df) # For different kinds of string regex manipulation and replacement see 
-  # https://stevencarlislewalker.wordpress.com/2013/02/13/remove-or-replace-everything-before-or-after-a-specified-character-in-r-strings/
+  eng_df_names <- c(eng_df_names, name_of_df) 
 }
   
 # zul_df_names <- vector()
@@ -83,7 +86,7 @@ df_catAndConc <- setNames(data.frame(matrix(ncol = 2, nrow = 0)),
 
 
 # Actually making vectors with concept as name and categories as entries (in this loop we will read in category names)
-for (i in 1:length(eng_df_names)){
+ for (i in 1:length(eng_df_names)){
   df_gotten <- get(eng_df_names[i])
   vec_gotten <- df_gotten[1]
   
@@ -121,8 +124,8 @@ for (i in 1:length(eng_df_names)){
 #   
 # }
   
-
-for (j in 1:nrow(df_gameDataSpecUser1)){
+# df_skrrr1 has user ID ad6d2bd6-3f29-4261-9025-01642c0e6f07
+for (j in 1:nrow(df_gameDataSpecUser1)){ 
   # Searching for what concept is from which category and then putting it into the right entry into the 
   ind <- which(df_catAndConc$Concept == df_gameDataSpecUser1$Concept[j])
 
@@ -144,7 +147,9 @@ for (j in 1:nrow(df_gameDataSpecUser1)){
   }
 }
 
-for (j in 1:nrow(df_gameDataSpecUser2)){
+# df_skrrr2 has user ID eec99158-8dfb-4e50-9de2-e590930e09b6
+for (j in 1:nrow(df_gameDataSpecUser2)){ 
+
   # Searching for what concept is from which category and then putting it into the right entry into the 
   ind <- which(df_catAndConc$Concept == df_gameDataSpecUser2$Concept[j])
   
@@ -166,7 +171,9 @@ for (j in 1:nrow(df_gameDataSpecUser2)){
   }
 }
 
-for (j in 1:nrow(df_gameDataSpecUser3)){
+# df_skrrr3 has user ID c702d848-2c04-4619-8a81-c5e18a7e6592
+for (j in 1:nrow(df_gameDataSpecUser3)){ 
+
   # Searching for what concept is from which category and then putting it into the right entry into the 
   ind <- which(df_catAndConc$Concept == df_gameDataSpecUser3$Concept[j])
   
@@ -194,23 +201,118 @@ for (j in 1:nrow(df_gameDataSpecUser3)){
 
 path_user <- "/Users/skhathi/Documents/DataAnalysis/Ibumdlali/"
 df_allUserInfo <- as.data.frame(read_csv(paste0(path_user, "AllUserInfo.csv", collapse = NULL))) # Reads incorrectly with read_csv2, but correct with ..._csv. What's the difference
-vec_allUserIDs <- as.vector(df_allUsers$Id)
 
+
+# Following two users have many games played but aren't in 1st 100 so appending them manually
+vec_addedUser2Info <- c("0.060168305322567589", "1", "64.630144585965041", NA, 
+                        "2019-04-22 08:17:37.207 UTC", NA, "2f7e195d-8ddf-4b78-9ced-13f0a95dacc1", 
+                        "2019-04-13 07:42:31.633 UTC", "kieran.ewers@mail.com", "4", 
+                        "e0NMogwvPYQ:APA91bHR23B1_5Q3LXtJfVMuKGNQVBTb5KcwRVGgfLr9O5dn8HQEkV07rJdW8K4oKxgpG7JoNfT09dS1G5lgh9_Q4gONASZVv5Ma-qjoRi8GMD4IAYB8mYEVXa_lTZPxQ7QvnWsQrNN2", 
+                        "1", "0", "1", "eec99158-8dfb-4e50-9de2-e590930e09b6", "Ewers", "4284.5818491925638", "Kieran", NA, "https://graph.facebook.com/1977030022423152/picture?type=large",
+                        "TmV0d29ya05vZGU6MTA=", "0713916075", "Standard Bank", "Tertiary (diploma, degree, etc.)", "25 - 34", "1977030022423152", "279f7fe4-1543-4693-9272-f4f5a606363f"
+) # for the df df_allUserInfo
+
+vec_addedUser3Info <- c("0.060405492251382031", "1", "65.063374050817018", NA, 
+                        "2019-04-24 08:24:59.480 UTC", NA, "2f7e195d-8ddf-4b78-9ced-13f0a95dacc1", 
+                        "2019-04-11 12:41:27.445 UTC", "fathimadbn@gmail.com", "12", 
+                        "dP4qlLHyXrU:APA91bGe36sEsIWuAfFTMdBF9qfPrQCruS48OrDo_vFQLRPY6rrYBu6BXIUuoLwLHAGff_A-2I7O4JZcJ7RjqMhCwT8GYz5kZHcDnnmiSCIE6rWhSijk37p4cxcxBE6eJrJ6j6yI3kX_", 
+                        "0", "0", "1", "c702d848-2c04-4619-8a81-c5e18a7e6592", "Ebrahim", "4236.7744010739643", "Fatima", NA, "https://graph.facebook.com/1164627037047797/picture?type=large",
+                        "TmV0d29ya05vZGU6MTI=", "0740597866", "F N B", "Matric", "25 - 34", "1164627037047797", NA
+) # for the df df_allUserInfo
+df_allUserInfo <- rbind(df_allUserInfo, vec_addedUser2Info, vec_addedUser3Info)
+
+
+vec_allUserIDs <- as.vector(df_allUserInfo$Id) # Still only up to 1002
+
+
+# Choose your slicing dimensions. 
+# Note, no analysis if the criteria above is marked FALSE
+
+# Keys for analysis and slicing and stuff
+#----  
+lang <- c("Zulu", "English")
+banks <- c(NA, "F N B", "Capitec", "Absa", "Standard Bank", "Nedbank", "Other", "No bank account", "African Bank")
+networks <- c(NA, "TmV0d29ya05vZGU6MTM=", "TmV0d29ya05vZGU6MTA=", "TmV0d29ya05vZGU6MTE=", "TmV0d29ya05vZGU6MTI=")
+prepaids <- c(1, 0)
+ages <- c(NA, "18 - 24", "25 - 34", "35 - 44", "45 - 54", "55 - 64", "65+") # check if there's a space between the 65 and the +
+# geos <- c()
+edus <- c(NA, "Matric", "High school", "Tertiary (diploma, degree, etc.)", "No schooling", "Primary school")
+
+# Sleutels 
+df_networkKey <- data.frame("ID" = c("TmV0d29ya05vZGU6MTI=", "TmV0d29ya05vZGU6MTM=", "TmV0d29ya05vZGU6MTA=", "TmV0d29ya05vZGU6MTE="),
+                            "Network" = c("Cell C", "Telkom Mobile", "Vodacom", "MTN")) # We made a key table for networks
+df_langKey <- data.frame("LanguagePreferenceID" = c("2f7e195d-8ddf-4b78-9ced-13f0a95dacc1", "c1d6424b-b692-446c-9d3d-d0c4ed1cbb63"),
+                         "LanguageKey" = c(0, 1),
+                         "Language" = c("English", "Zulu"))
+
+# Analysis rigor
 # Slicing dimension/criteria (cuts)
-by_bank = FALSE
-by_network = FALSE
-by_prepaid = FALSE
-by_age = FALSE
-by_geo = FALSE
+by_lang = TRUE
+cut_byLang = c("English")
+
+by_bank = TRUE
+cut_byBank = c("Capitec", "Standard Bank") # third person is mized. Soz nigga
+
+by_network = TRUE
+cut_byNet = c("Cell C", "Vodacom") # Indices 1 & 3 in key table df_networKey
+
+by_prepaid = FALSE # Testing that the filtering works when you false it
+cut_byPrep = c("0")
+
+by_age = TRUE
+cut_byAge = c("18 - 24", "25 - 34", "35 - 44", "45 - 54", "55 - 64")
+
+# by_geo = FALSE
+# cut_byGeo = c() 
+
 by_edu = FALSE
+cut_byEdu = c()
+
+
+# Reassign df names for single specific users to their user ID for group analysis
+#----
+assign("ad6d2bd6-3f29-4261-9025-01642c0e6f07" ,df_skrrr1)
+assign("eec99158-8dfb-4e50-9de2-e590930e09b6" ,df_skrrr2)
+assign("c702d848-2c04-4619-8a81-c5e18a7e6592" ,df_skrrr3)
+#rm(df_skrrr1, df_skrrr2, df_skrrr3)
+
 
 # Dividing time range into analysable chunks
 # First we do this for 3 users and then generalize approach for all users in specific case (can be by group or we can do all and group by analysis)
-list_uID <- list(df_skrrr1, df_skrrr2, df_skrrr3)
-
+# Idea is import the data (dfs) made in Analysis script in a loop for analysis. Change the lines below to import properly 
+list_uID <- list(df_skrrr1, df_skrrr2, df_skrrr3) # Make list_uID list of all users by df name being ID and dfs being user df tingz as below
+#list_uID <- 
 for (i in 1:length(list_uID)){
   
-}
+  if (by_lang == TRUE){
+    for (j in seq_along(cut_byLang)){
+      if (cut_byLang[j] != ){
+        
+      }
+    }
+  }
   
+  if (by_bank == TRUE){
+    
+  }
+  if (by_network == TRUE){
+    
+  }
+  if (by_prepaid == TRUE){
+    
+  }
+  if (by_age == TRUE){
+    
+  }
+  if (by_edu == TRUE){
+    
+  }
+  
+  
+  
+  
+  
+}
+
   
   
