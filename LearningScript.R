@@ -197,7 +197,7 @@ for (j in 1:nrow(df_gameDataSpecUser3)){
 
 
 ## Now to actually build learning framework
-##---- 
+## ---- 
 
 path_user <- "/Users/skhathi/Documents/DataAnalysis/Ibumdlali/"
 df_allUserInfo <- as.data.frame(read_csv(paste0(path_user, "AllUserInfo.csv", collapse = NULL))) # Reads incorrectly with read_csv2, but correct with ..._csv. What's the difference
@@ -280,13 +280,16 @@ assign("c702d848-2c04-4619-8a81-c5e18a7e6592" ,df_skrrr3)
 # Dividing time range into analysable chunks
 # First we do this for 3 users and then generalize approach for all users in specific case (can be by group or we can do all and group by analysis)
 # Idea is import the data (dfs) made in Analysis script in a loop for analysis. Change the lines below to import properly 
-list_uID <- list(df_skrrr1, df_skrrr2, df_skrrr3) # Make list_uID list of all users by df name being ID and dfs being user df tingz as below
-#list_uID <- 
+list_uID <- vector("list", length = length(vec_allUserIDs))
+for (k in seq_along(list_uID)){
+  list_uID[[k]] <- get(vec_allUserIDs[k]) # Make list_uID list of all users by df name being ID and dfs being user df tingz as below
+}
+
 for (i in 1:length(list_uID)){
   
   if (by_lang == TRUE){
     for (j in seq_along(cut_byLang)){
-      if (cut_byLang[j] != ){
+      if (cut_byLang[j] != df_allUserInfo){
         
       }
     }

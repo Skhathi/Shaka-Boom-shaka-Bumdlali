@@ -106,9 +106,9 @@ if ((anyDuplicated(vec_allUserIDs) == 0) == TRUE){
 
 # Now to start populating one person's Ib'umdlali table to the max
 for (i in 1:length(vec_allUserIDs)){ # change the 3 to length(vec_allUserIDs)
-  if (exists(vec_allUserIDs[i])){ 
+  if (exists(vec_allUserIDs[i]) == TRUE){ 
     # Nothing should happen if the df exists (we will append info to all dfs when we have all users extant in df)
-  } else { # Make new df with user ID as the name if the df doesn't exist
+  } else if (exists(vec_allUserIDs[i]) == FALSE) { # Make new df with user ID as the name if the df doesn't exist
     df_skrrr <- setNames(data.frame(matrix(ncol = 7, nrow = 0)), 
                          c("GameID",
                            "Date",
@@ -123,36 +123,39 @@ for (i in 1:length(vec_allUserIDs)){ # change the 3 to length(vec_allUserIDs)
     rm(df_skrrr)
   }
   
-  ind <- which(df_gameData$UserId == vec_allUserIDs[i]) # Index for the corresponding User IDs. 
   
-  if (length(ind) > 0){
-    for (j in 1:length(ind)){
-      
-      df_userDataEach <- vec_allUserIDs[i]
-      df_userInQuestion <- get(df_userDataEach) # Get the df according to the variable name
-      
-      # next is a vector of the entries I need to append
-      addition <- c(df_gameData$GameId[ind[j]], 
-                    gsub("\\ .*", "",df_gameData$DatePlayed[ind[j]]), # does some freaky shit when using as.Date so just remove anything following date
-                    sub('\\..*', '', (gsub(paste(as.Date(df_gameData$DatePlayed[ind[j]]), "", collapse = NULL), "", df_gameData$DatePlayed[ind[j]]))), # this has the tiime but I'm not thinking about it too much. I'll sort when I do
-                    df_gameData$Category[ind[j]], 
-                    df_gameData$Concept[ind[j]], 
-                    df_gameData$Difficulty[ind[j]], 
-                    df_gameData$Correct[ind[j]] 
-      )
-      
-      df_userInQuestion[nrow(df_userInQuestion)+1, ] <- addition # finally, addition of row works
-      df_userInQuestion$Diff <- as.integer(df_userInQuestion$Diff)
-      
-      df_nameSake <- vec_allUserIDs[i]
-      assign(df_nameSake,df_userInQuestion)
-      rm(df_userInQuestion)
-      #df_nameSake <- df_nameSake[order(df_nameSake[2], df_nameSake[3]),]
-    }
-  } else {
-    # Nothing is happening 
-  }  
-  
+  for (vec_allUserIDs[i] in df_gameData$UserId){
+    
+    ind <- which(df_gameData$UserId == vec_allUserIDs[i]) # Index for the corresponding User IDs. 
+    if (length(ind) > 0){
+      for (j in 1:length(ind)){
+        
+        df_userDataEach <- vec_allUserIDs[i]
+        df_userInQuestion <- get(df_userDataEach) # Get the df according to the variable name
+        
+        # next is a vector of the entries I need to append
+        addition <- c(df_gameData$GameId[ind[j]], 
+                      gsub("\\ .*", "",df_gameData$DatePlayed[ind[j]]), # does some freaky shit when using as.Date so just remove anything following date
+                      sub('\\..*', '', (gsub(paste(as.Date(df_gameData$DatePlayed[ind[j]]), "", collapse = NULL), "", df_gameData$DatePlayed[ind[j]]))), # this has the tiime but I'm not thinking about it too much. I'll sort when I do
+                      df_gameData$Category[ind[j]], 
+                      df_gameData$Concept[ind[j]], 
+                      df_gameData$Difficulty[ind[j]], 
+                      df_gameData$Correct[ind[j]] 
+        )
+        
+        df_userInQuestion[nrow(df_userInQuestion)+1, ] <- addition # finally, addition of row works
+        df_userInQuestion$Diff <- as.integer(df_userInQuestion$Diff)
+        
+        df_nameSake <- vec_allUserIDs[i]
+        assign(df_nameSake,df_userInQuestion)
+        rm(df_userInQuestion)
+        #df_nameSake <- df_nameSake[order(df_nameSake[2], df_nameSake[3]),]
+      }
+    } else {
+      # Nothing is happening 
+    }  
+    
+  } # for (vec_alluserIDs[i] in df_gameData$UserId) end of
   
 }
 
