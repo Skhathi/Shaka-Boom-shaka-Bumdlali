@@ -104,11 +104,19 @@ if ((anyDuplicated(vec_allUserIDs) == 0) == TRUE){
               Please check users table on BigQuery for problem on line", y))
 }
 
+
+# Making vectoprs to tally which user IDs have played matches and which haven't
+vec_userIDsPlayed <- vector()
+vec_userIDsNotPlayed <- vector()
+
+# NOTE: the last two user IDs in the learning script under analysis are not extant. Put in manually
+
 # Now to start populating one person's Ib'umdlali table to the max
 for (i in 1:length(vec_allUserIDs)){ # change the 3 to length(vec_allUserIDs)
   if (exists(vec_allUserIDs[i]) == TRUE){ 
+    print(paste("User ID for index ", i, " already has df"))
     # Nothing should happen if the df exists (we will append info to all dfs when we have all users extant in df)
-  } else if (exists(vec_allUserIDs[i]) == FALSE) { # Make new df with user ID as the name if the df doesn't exist
+  } else { # Make new df with user ID as the name if the df doesn't exist
     df_skrrr <- setNames(data.frame(matrix(ncol = 7, nrow = 0)), 
                          c("GameID",
                            "Date",
@@ -123,8 +131,8 @@ for (i in 1:length(vec_allUserIDs)){ # change the 3 to length(vec_allUserIDs)
     rm(df_skrrr)
   }
   
-  
-  for (vec_allUserIDs[i] in df_gameData$UserId){
+  # When running up to here, insert curly bracket in console and hit enter
+  if (vec_allUserIDs[i] %in% df_gameData$UserId == TRUE){
     
     ind <- which(df_gameData$UserId == vec_allUserIDs[i]) # Index for the corresponding User IDs. 
     if (length(ind) > 0){
@@ -152,8 +160,15 @@ for (i in 1:length(vec_allUserIDs)){ # change the 3 to length(vec_allUserIDs)
         #df_nameSake <- df_nameSake[order(df_nameSake[2], df_nameSake[3]),]
       }
     } else {
-      # Nothing is happening 
+      # print(paste("No games played for user ID ", vec_allUserIDs[i], collapse = NULL))
+      # vec_userIDsNotPlayed <- c(vec_userIDsNotPlayed, vec_allUserIDs[i])
     }  
+    
+    vec_userIDsPlayed <- c(vec_userIDsPlayed, vec_allUserIDs[i]) 
+    
+  } else {
+    print(paste("No games played for user ID ", vec_allUserIDs[i], collapse = NULL))
+    vec_userIDsNotPlayed <- c(vec_userIDsNotPlayed, vec_allUserIDs[i])
     
   } # for (vec_alluserIDs[i] in df_gameData$UserId) end of
   

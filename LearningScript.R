@@ -274,6 +274,9 @@ cut_byEdu = c()
 assign("ad6d2bd6-3f29-4261-9025-01642c0e6f07" ,df_skrrr1)
 assign("eec99158-8dfb-4e50-9de2-e590930e09b6" ,df_skrrr2)
 assign("c702d848-2c04-4619-8a81-c5e18a7e6592" ,df_skrrr3)
+
+vec_allUserIDs <- c(vec_allUserIDs, "eec99158-8dfb-4e50-9de2-e590930e09b6", "c702d848-2c04-4619-8a81-c5e18a7e6592")
+vec_userIDsPlayed <- c(vec_userIDsPlayed, "eec99158-8dfb-4e50-9de2-e590930e09b6", "c702d848-2c04-4619-8a81-c5e18a7e6592")
 #rm(df_skrrr1, df_skrrr2, df_skrrr3)
 
 
