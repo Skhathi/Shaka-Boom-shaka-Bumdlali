@@ -326,13 +326,13 @@ if (by_bank == TRUE){
     num_ID <- vec_userIDsPlayed[i]
     index <- which(df_allUserInfo$Id == num_ID)
 
+    
+    
       ind_equi <- which(df_allUserInfo$Bank[index] != cut_byBank)
       if (length(cut_byBank) == length(ind_equi)){
         list_uID[[i]] <- NULL
         vec_userIDsPostCut = vec_userIDsPostCut[vec_userIDsPostCut != vec_userIDsPostCut[i]]
       }
-
-    
   }
   
 }
@@ -342,13 +342,13 @@ if (by_bank == TRUE){
 if (by_network == TRUE){
   
   for (i in length(list_uID):1){
-    for (j in seq_along(cut_byNet)){
-      num_ID <- vec_userIDsPlayed[i]
-      index <- which(df_allUserInfo$Id == num_ID)
-      
+    
+    ind_equi <- which(df_allUserInfo$NetworkId[index] != cut_byBank)
+    if (length(cut_byNet) == length(ind_equi)){
+      list_uID[[i]] <- NULL
+      vec_userIDsPostCut = vec_userIDsPostCut[vec_userIDsPostCut != vec_userIDsPostCut[i]]
     }
   }
-  
 }
 # end of Cut by Network
 
