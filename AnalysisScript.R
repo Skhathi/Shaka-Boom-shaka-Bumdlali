@@ -153,6 +153,7 @@ for (i in 1:length(vec_allUserIDs)){ # change the 3 to length(vec_allUserIDs)
         
         df_userInQuestion[nrow(df_userInQuestion)+1, ] <- addition # finally, addition of row works
         df_userInQuestion$Diff <- as.integer(df_userInQuestion$Diff)
+        df_userInQuestion <- df_userInQuestion[order(df_userInQuestion$Date, df_userInQuestion$Time),]
         
         df_nameSake <- vec_allUserIDs[i]
         assign(df_nameSake,df_userInQuestion)

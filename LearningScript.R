@@ -277,48 +277,121 @@ assign("c702d848-2c04-4619-8a81-c5e18a7e6592" ,df_skrrr3)
 
 vec_allUserIDs <- c(vec_allUserIDs, "eec99158-8dfb-4e50-9de2-e590930e09b6", "c702d848-2c04-4619-8a81-c5e18a7e6592")
 vec_userIDsPlayed <- c(vec_userIDsPlayed, "eec99158-8dfb-4e50-9de2-e590930e09b6", "c702d848-2c04-4619-8a81-c5e18a7e6592")
+vec_userIDsPostCut <- vec_userIDsPlayed
 #rm(df_skrrr1, df_skrrr2, df_skrrr3)
 
 
 # Dividing time range into analysable chunks
 # First we do this for 3 users and then generalize approach for all users in specific case (can be by group or we can do all and group by analysis)
 # Idea is import the data (dfs) made in Analysis script in a loop for analysis. Change the lines below to import properly 
-list_uID <- vector("list", length = length(vec_allUserIDs))
+list_uID <- vector("list", length = length(vec_userIDsPlayed))
 for (k in seq_along(list_uID)){
-  list_uID[[k]] <- get(vec_allUserIDs[k]) # Make list_uID list of all users by df name being ID and dfs being user df tingz as below
+  list_uID[[k]] <- get(vec_userIDsPlayed[k]) # Make list_uID list of all users by df name being ID and dfs being user df tingz as below
 }
 
-for (i in 1:length(list_uID)){
+## Cut flow time
+##---- 
+# Cut by Language 
+if (by_lang == TRUE){
   
-  if (by_lang == TRUE){
-    for (j in seq_along(cut_byLang)){
-      if (cut_byLang[j] != df_allUserInfo){
-        
+  for (i in length(list_uID):1){
+    if (length(cut_byLang) == 2){
+      # Nothin changes because we are looking at both languages if the length is 2 (Eng + Zul)
+    } else if (length(cut_byLang) == 1){
+      if (by_lang == "English"){
+        num_ID <- vec_userIDsPlayed[i]
+        index <- which(df_allUserInfo$Id == num_ID)
+        if (df_allUserInfo$LanguagePreferenceId[index] != "2f7e195d-8ddf-4b78-9ced-13f0a95dacc1"){
+          list_uID[[i]] <- NULL
+          vec_userIDsPostCut = vec_userIDsPostCut[vec_userIDsPostCut != vec_userIDsPostCut[i]]
+        }
+      } else if (by_lang == "Zulu"){
+        num_ID <- vec_userIDsPlayed[i]
+        index <- which(df_allUserInfo$Id == num_ID)
+        if (df_allUserInfo$LanguagePreferenceId[index] != "c702d848-2c04-4619-8a81-c5e18a7e6592"){
+          list_uID[[i]] <- NULL
+          vec_userIDsPostCut = vec_userIDsPostCut[vec_userIDsPostCut != vec_userIDsPostCut[i]]
+        }
       }
     }
   }
   
-  if (by_bank == TRUE){
-    
-  }
-  if (by_network == TRUE){
-    
-  }
-  if (by_prepaid == TRUE){
-    
-  }
-  if (by_age == TRUE){
-    
-  }
-  if (by_edu == TRUE){
-    
-  }
+}
+# end of Cut by Language
+
+# Cut by Bank
+if (by_bank == TRUE){
   
-  
-  
-  
+  for (i in length(list_uID):1){
+    num_ID <- vec_userIDsPlayed[i]
+    index <- which(df_allUserInfo$Id == num_ID)
+
+      ind_equi <- which(df_allUserInfo$Bank[index] != cut_byBank)
+      if (length(cut_byBank) == length(ind_equi)){
+        list_uID[[i]] <- NULL
+        vec_userIDsPostCut = vec_userIDsPostCut[vec_userIDsPostCut != vec_userIDsPostCut[i]]
+      }
+
+    
+  }
   
 }
+# end of Cut by Bank
+
+# Cut by Network
+if (by_network == TRUE){
+  
+  for (i in length(list_uID):1){
+    for (j in seq_along(cut_byNet)){
+      num_ID <- vec_userIDsPlayed[i]
+      index <- which(df_allUserInfo$Id == num_ID)
+      
+    }
+  }
+  
+}
+# end of Cut by Network
+
+# Cut by Prepaid
+if (by_prepaid == TRUE){
+  for (i in length(list_uID):1){
+    for (j in seq_along(cut_byPrep)){
+      num_ID <- vec_userIDsPlayed[i]
+      index <- which(df_allUserInfo$Id == num_ID)
+      
+    }
+  }
+  
+}
+# end of Cut by Prepaid
+
+# Cut by Age
+if (by_age == TRUE){
+  
+  for (i in length(list_uID):1){
+    for (j in seq_along(cut_byAge)){
+      num_ID <- vec_userIDsPlayed[i]
+      index <- which(df_allUserInfo$Id == num_ID)
+      
+    }
+  }
+  
+}
+# end of Cut by Age
+
+# Cut by Education
+if (by_edu == TRUE){
+  
+  for (i in length(list_uID):1){
+    for (j in seq_along(cut_byEdu)){
+      num_ID <- vec_userIDsPlayed[i]
+      index <- which(df_allUserInfo$Id == num_ID)
+      
+    }
+  }
+  
+}
+# end of Cut by Education
 
   
   
