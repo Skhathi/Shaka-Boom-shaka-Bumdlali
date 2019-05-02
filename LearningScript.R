@@ -2,12 +2,12 @@ library(pacman) # Check https://github.com/trinker/pacman for pacman package use
 p_load(readxl)
 p_load(tidyverse)
 p_load(dplyr)
-source("AnalysisScript.R")
+source("AnalysisScript.R") # Regard AnalysisScript.R scrip and change paths for data used
 
 
 ## Following code produces df df_skrrr1,2,3 for specific users to make framework for
 # Automate this in a loop for all users (these will be changed to be the user IDs for automation)
-##----
+##Dfs for sample data analysis----
 df_skrrr1 <- setNames(data.frame(matrix(ncol = 7, nrow = 0)), 
                      c("GameID",
                        "Date",
@@ -197,7 +197,7 @@ for (j in 1:nrow(df_gameDataSpecUser3)){
 
 
 ## Now to actually build learning framework
-## ---- 
+##Paths for data ---- 
 
 path_user <- "/Users/skhathi/Documents/DataAnalysis/Ibumdlali/"
 df_allUserInfo <- as.data.frame(read_csv(paste0(path_user, "AllUserInfo.csv", collapse = NULL))) # Reads incorrectly with read_csv2, but correct with ..._csv. What's the difference
@@ -229,7 +229,7 @@ vec_allUserIDs <- as.vector(df_allUserInfo$Id) # Still only up to 1002
 # Note, no analysis if the criteria above is marked FALSE
 
 # Keys for analysis and slicing and stuff
-#----  
+#Dimensions (cuts)----  
 lang <- c("Zulu", "English")
 banks <- c(NA, "F N B", "Capitec", "Absa", "Standard Bank", "Nedbank", "Other", "No bank account", "African Bank")
 networks <- c(NA, "TmV0d29ya05vZGU6MTM=", "TmV0d29ya05vZGU6MTA=", "TmV0d29ya05vZGU6MTE=", "TmV0d29ya05vZGU6MTI=")
@@ -270,7 +270,7 @@ cut_byEdu = c()
 
 
 # Reassign df names for single specific users to their user ID for group analysis
-#----
+#Appending users in dfs----
 assign("ad6d2bd6-3f29-4261-9025-01642c0e6f07" ,df_skrrr1)
 assign("eec99158-8dfb-4e50-9de2-e590930e09b6" ,df_skrrr2)
 assign("c702d848-2c04-4619-8a81-c5e18a7e6592" ,df_skrrr3)
@@ -290,7 +290,7 @@ for (k in seq_along(list_uID)){
 }
 
 ## Cut flow time
-##---- 
+##Cut flow (glorified filter)---- 
 # Cut by Language 
 if (by_lang == TRUE){
   
@@ -342,8 +342,18 @@ if (by_bank == TRUE){
 if (by_network == TRUE){
   
   for (i in length(list_uID):1){
+    num_ID <- vec_userIDsPlayed[i]
+    index <- which(df_allUserInfo$Id == num_ID)
     
-    ind_equi <- which(df_allUserInfo$NetworkId[index] != cut_byBank)
+    langKeyInd = which(df_networkKey$Network == cut_byNet)
+    cut_convLang <- vector()
+    
+    for (k in seq_along(langKeyInd)){
+      cut_convLang <- c(cut_convLang, df_networkKey$ID)
+    }
+      
+    ind_equi <- which(df_allUserInfo$NetworkId[index] != cut_convLang)
+    
     if (length(cut_byNet) == length(ind_equi)){
       list_uID[[i]] <- NULL
       vec_userIDsPostCut = vec_userIDsPostCut[vec_userIDsPostCut != vec_userIDsPostCut[i]]
@@ -393,5 +403,48 @@ if (by_edu == TRUE){
 }
 # end of Cut by Education
 
+
+
+## Analysis time
+##Analysis---- 
+
+num_games <- 0 # initialize number of games (total)
+for (i in 1:length(list_uID)){
+  num_games <- num_games + nrow(list_uID[[i]])
+}
+
+mean_games <- num_games/length(list_uID) # average number of games played
+
+# Cut away users with fewer number of games than the average for analysis
+anal_list_uID <- list_uID 
+anal_vec_userIDsPostCut <- vec_userIDsPostCut
+
+for (i in length(anal_list_uID):1){
+  if (nrow(anal_list_uID[[i]]) <= floor(mean_games)){
+    anal_list_uID[[i]] <- NULL
+    anal_vec_userIDsPostCut = anal_vec_userIDsPostCut[anal_vec_userIDsPostCut != anal_vec_userIDsPostCut[i]]
+  }
   
+}
+
+print(paste("The analysis is looking at", length(anal_vec_userIDsPostCut), "users for analysis under the specified dimensions"))
+
+anal_vec_gamesPerUser <- vector()
+for (i in seq_along(anal_vec_userIDsPostCut)){
+  anal_vec_gamesPerUser <- c(anal_vec_gamesPerUser, nrow(anal_list_uID[[i]]))
+}
+
+# This requires some thought re: how to look at the final tables (eventulaly plots) withc categories in mind
   
+
+
+
+
+
+
+
+
+
+
+
+
